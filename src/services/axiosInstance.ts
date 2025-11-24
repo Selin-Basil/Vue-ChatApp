@@ -63,12 +63,10 @@ axiosInstance.interceptors.response.use(
           return axiosInstance(originalRequest) // Retry original request
         } catch (refreshError) {
           console.error('Token refresh failed:', refreshError)
-          clearAllTokens()
           userStore.clearUser()
           router.push({ name: 'Login' })
         }
       } else {
-        clearAllTokens()
         userStore.clearUser()
         router.push({ name: 'Login' })
       }

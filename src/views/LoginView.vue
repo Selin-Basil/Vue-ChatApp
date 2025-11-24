@@ -4,6 +4,7 @@ import useVuelidate from '@vuelidate/core'
 import { required, email as emailRule, minLength } from '@vuelidate/validators'
 import { login } from '@/services/authentication/authenticationServices'
 import { useRouter } from 'vue-router'
+import { BForm, BFormFloatingLabel, BFormInput } from 'bootstrap-vue-next'
 
 const email = ref('')
 const password = ref('')
@@ -19,20 +20,18 @@ const rules = computed(() => ({
 const v$ = useVuelidate(rules, { email, password })
 
 const handleLogin = async () => {
-  // 1️⃣ Trigger validation
+  //  Trigger validation
   const isValid = await v$.value.$validate()
   if (!isValid) {
     console.warn('Validation failed')
     return
   }
 
-  // 2️⃣ Proceed if valid
+  // Proceed if valid
   try {
     const response = await login({ email: email.value, password: password.value })
-    if (response) {
-      console.log('Login successful:', response)
-      router.push('/dashboard')
-    }
+    console.log('Login successful:', response)
+    router.push('/dashboard')
   } catch (error) {
     console.error('Login failed:', error)
   }
@@ -41,42 +40,20 @@ const handleLogin = async () => {
 
 <template>
   <div class="login-view">
-    <h1>Login</h1>
-    <form @submit.prevent="handleLogin">
-      <!-- Email -->
-      <div>
-        <label for="email">Email:</label>
-        <input
-          type="email"
-          v-model="email"
-          id="email"
-          :class="{ 'input-error': v$.email.$error }"
-        />
-        <div v-if="v$.email.$error" class="error-message">
-          <span v-if="v$.email.required">Email is required.</span>
-          <span v-else-if="v$.email.email">Enter a valid email address.</span>
-        </div>
-      </div>
-
-      <!-- Password -->
-      <div>
-        <label for="password">Password:</label>
-        <input
-          type="password"
-          v-model="password"
-          id="password"
-          :class="{ 'input-error': v$.password.$error }"
-        />
-        <div v-if="v$.password.$error" class="error-message">
-          <span v-if="!v$.password.required">Password is required.</span>
-          <span v-else-if="!v$.password.minLength">
-            Password must be at least 6 characters.
-          </span>
-        </div>
-      </div>
-
-      <button type="submit">Login</button>
-    </form>
+      <BForm @submit.prevent="handleLogin">
+        <BFormText class="login-text">Login </BFormText>
+        <BFormFloatingLabel label="Email address" label-for="floatingEmail" class="my-4">
+          <BFormInput id="floatingEmail" type="email" placeholder="Email address" v-model="email"/>
+        </BFormFloatingLabel>
+        <BFormValidFeedback v-if="v$.email.$error" class="error-message">
+          <div v-if="!v$.email.required">Email is required.</div>
+          <div v-else-if="!v$.email.email">Email must be valid.</div>
+        </BFormValidFeedback>
+        <BFormFloatingLabel label="Password" label-for="floatingPassword" class="my-4">
+          <BFormInput id="floatingPassword" type="password" placeholder="Password" v-model="password" />
+        </BFormFloatingLabel>
+        <BButton type="submit" variant="primary" class="w-100 mt-4">Login</BButton>
+      </BForm>
   </div>
 </template>
 
@@ -88,5 +65,17 @@ const handleLogin = async () => {
 .error-message {
   color: red;
   font-size: 0.9em;
+}
+.login-view {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2em;
+}
+.login-text{
+  font-size: 3em;
+  font-weight: bold;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 </style>

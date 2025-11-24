@@ -21,8 +21,10 @@
     "@vuelidate/validators": "^2.0.4",
     "axios": "^1.13.2",
     "bootstrap": "^5.3.8",
+    "bootstrap-vue-3": "^0.5.1",
     "bootstrap-vue-next": "^0.40.7",
     "pinia": "^3.0.3",
+    "primeicons": "^7.0.0",
     "vue": "^3.5.22",
     "vue-router": "^4.6.3"
   },
