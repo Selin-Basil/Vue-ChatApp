@@ -5,6 +5,7 @@ import { required, email as emailRule, minLength } from '@vuelidate/validators'
 import { login } from '@/services/authentication/authenticationServices'
 import { useRouter } from 'vue-router'
 import { BForm, BFormFloatingLabel, BFormInput } from 'bootstrap-vue-next'
+import { setAccessToken, setAccessTokenExpiry, setRefreshToken } from '@/utils/token'
 
 const email = ref('')
 const password = ref('')
@@ -31,6 +32,9 @@ const handleLogin = async () => {
   try {
     const response = await login({ email: email.value, password: password.value })
     console.log('Login successful:', response)
+    setAccessToken(response.access_token.token)
+    setAccessTokenExpiry(response.access_token.expiry)
+    setRefreshToken(response.refresh_token.token)
     router.push('/dashboard')
   } catch (error) {
     console.error('Login failed:', error)

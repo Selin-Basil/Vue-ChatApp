@@ -15,4 +15,11 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  build: {
+    sourcemap: false, // Disable source maps in production builds
+  },
+  // For development, you can also disable source maps:
+  // esbuild: {
+  //   sourcemap: false,
+  // },
 })
